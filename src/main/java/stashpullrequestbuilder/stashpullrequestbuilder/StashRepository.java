@@ -250,6 +250,8 @@ public class StashRepository {
 
         boolean shouldBuild = true;
 
+        logger.info("Processing PR: " + pullRequest.getId());
+
         if (pullRequest.getState() != null && pullRequest.getState().equals("OPEN")) {
             if (isSkipBuild(pullRequest.getTitle())) {
                 logger.info("Skipping PR: " + pullRequest.getId() + " as title contained skip phrase");
@@ -286,6 +288,7 @@ public class StashRepository {
                 Collections.sort(comments);
                 Collections.reverse(comments);
                 for (StashPullRequestComment comment : comments) {
+                    logger.fine(comment.toString());
                     String content = comment.getText();
                     if (content == null || content.isEmpty()) {
                         continue;
@@ -342,6 +345,8 @@ public class StashRepository {
         }
         if (shouldBuild) {
             logger.info("Building PR: " + pullRequest.getId());
+        } else {
+            logger.fine("Skipping PR: " + pullRequest.getId());
         }
         return shouldBuild;
     }
